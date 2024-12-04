@@ -1,2 +1,0 @@
-# diplomado
-Alvaro Mamani Arhuata
