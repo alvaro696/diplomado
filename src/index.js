@@ -4,7 +4,7 @@ import 'dotenv/config';
 import logger from './logs/logger.js';
 
 async function main() {
-    await sequelize.sync();
+    await sequelize.sync({ force: false });
     const port = process.env.PORT;
     app.listen(port);
     console.log('escuchando en el puerto: ' + port);
