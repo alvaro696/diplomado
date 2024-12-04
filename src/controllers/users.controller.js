@@ -27,7 +27,7 @@ async function createUser(reg, res) {
         const user = await User.create({ username, password });
         res.json(user);
     } catch (error) {
-        logger.error('error createUser ' + error);
+        logger.error('error createUser ' + error.message);
         res.status(500).json({ message: 'server error' });
     }
 }
