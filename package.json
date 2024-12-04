@@ -1,0 +1,11 @@
+{
+  "name": "diplomado",
+  "version": "1.0.0",
+  "description": "Proyecto final de diplomado ALvaro Mamani Arhuata",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "amamani",
+  "license": "ISC"
+}
