@@ -1,1 +1,9 @@
-terminando el proyecto
+# INTALACION
+
+- primer paso: crear variables de entorno (.env)
+
+- segundo paso: instalar node modules
+
+- tercer paso: ejecutar npm run dev
+
+- ejecutar en produccion: npm run start
