@@ -109,11 +109,52 @@ async function deleteUser(req, res) {
     }
 }
 
+async function getTasks(req, res) {
+    const { id } = req.params;
+    try {
+        const user = await User.findOne({
+            attributes: ['username'],
+            include: [{
+                model: Task,
+                attributes: ['name', 'done'],
+                /* where: {
+                    'done': true
+                }, */
+            }],
+            where: { id },
+        });
+        res.json(user);
+    } catch (error) {
+        logger.error('error al obtener tareas de usuario ' + error.message);
+        res.status(500).json({ message: 'server error' });
+    }
+}
+
+async function getTasksAll(req, res) {
+    try {
+        const user = await User.findAll({
+            attributes: ['username'],
+            include: [{
+                model: Task,
+                attributes: ['name', 'done'],
+                /* where: {
+                    'done': true
+                }, */
+            }],
+        });
+        res.json(user);
+    } catch (error) {
+        logger.error('error al obtener tareas de usuario ' + error.message);
+        res.status(500).json({ message: 'server error' });
+    }
+}
 export default {
     getUsers,
     createUser,
     getUser,
     updateuser,
     activateInactivate,
-    deleteUser
+    deleteUser,
+    getTasks,
+    getTasksAll
 }
