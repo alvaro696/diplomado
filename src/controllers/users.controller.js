@@ -1,11 +1,12 @@
 import { User } from "../models/users.js";
 import { Task } from "../models/tasks.js";
+import { Role } from "../models/role.js";
 import logger from "../logs/logger.js";
 import { Status } from "../constants/index.js";
 import { Op } from "sequelize";
 
 async function getUsers(req, res) {
-  logger.info("llega peticion lsitar");
+  logger.info("llega peticion listar usuarios");
   try {
     const { page = 1, limit = 10, search = "" } = req.query;
     const offset = (page - 1) * limit;
@@ -22,14 +23,30 @@ async function getUsers(req, res) {
 
     const result = await User.findAndCountAll({
       attributes: ["id", "username", "password", "status", "roleId"],
+      include: [
+        {
+          model: Role,
+          as: "Role", // Asegúrate de que coincide con la asociación definida en User
+          attributes: ["name"],
+        },
+      ],
       where: whereClause,
       order: [["id", "DESC"]],
       limit: parseInt(limit, 10),
       offset: parseInt(offset, 10),
     });
 
+    // Mapeamos cada usuario para agregar la propiedad "role"
+    const data = result.rows.map((user) => {
+      const userJson = user.toJSON();
+      return {
+        ...userJson,
+        role: userJson.Role ? userJson.Role.name : "No asignado",
+      };
+    });
+
     res.json({
-      data: result.rows,
+      data,
       total: result.count,
     });
   } catch (error) {
@@ -76,7 +93,7 @@ async function updateuser(req, res) {
         username,
         password,
         roleId,
-        status
+        status,
       },
       {
         where: {
