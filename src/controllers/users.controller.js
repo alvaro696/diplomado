@@ -21,7 +21,7 @@ async function getUsers(req, res) {
     }
 
     const result = await User.findAndCountAll({
-      attributes: ["id", "username", "password", "status", "role"],
+      attributes: ["id", "username", "password", "status", "roleId"],
       where: whereClause,
       order: [["id", "DESC"]],
       limit: parseInt(limit, 10),
@@ -40,8 +40,8 @@ async function getUsers(req, res) {
 
 async function createUser(reg, res) {
   try {
-    const { username, password, role } = reg.body;
-    const user = await User.create({ username, password, role });
+    const { username, password, roleId } = reg.body;
+    const user = await User.create({ username, password, roleId });
     logger.info("se crea usuario " + username);
     res.json(user);
   } catch (error) {
@@ -67,7 +67,7 @@ async function getUser(reg, res) {
 
 async function updateuser(req, res) {
   const { id } = req.params;
-  const { username, password, role, status } = req.body;
+  const { username, password, roleId, status } = req.body;
   try {
     if (!username || !password)
       return res.status(400).json({ message: "Usuario o password requerido" });
@@ -75,7 +75,7 @@ async function updateuser(req, res) {
       {
         username,
         password,
-        role,
+        roleId,
         status
       },
       {

@@ -2,6 +2,7 @@ import { DataTypes } from "sequelize";
 import sequelize from "../database/database.js";
 import { Task } from "./tasks.js";
 import { Status } from "../constants/index.js";
+import { Role } from "./role.js";
 import logger from "../logs/logger.js";
 import { encriptar } from "../common/bcrypt.js";
 
@@ -40,30 +41,20 @@ export const User = sequelize.define("users", {
       },
     },
   },
-  role: {
-    type: DataTypes.STRING,
+  roleId: {
+    type: DataTypes.INTEGER,
     allowNull: false,
-    defaultValue: "user", // Valor por defecto, puede ser "user" o "admin"
-    validate: {
-      notNull: {
-        msg: "El rol no puede ser nulo",
-      },
+    references: {
+      model: Role,
+      key: "id",
     },
   },
 });
 
 User.hasMany(Task);
 Task.belongsTo(User);
-
-/* User.hasMany(Task, {
-    foreignKey: 'user_id',
-    sourceKey: 'id',
-})
-
-Task.belongsTo(User, {
-    foreignKey: 'user_id',
-    targetKey: 'id',
-}) */
+User.belongsTo(Role, { as: "Role", foreignKey: "roleId" });
+Role.hasMany(User, { foreignKey: "roleId" });
 
 User.beforeCreate(async (user) => {
   try {

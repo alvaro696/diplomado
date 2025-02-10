@@ -1,9 +1,9 @@
 // src/models/Role.js
 import { DataTypes } from "sequelize";
-import sequelize from "../database/database.js";// Asegúrate de tener la conexión a la DB configurada
+import sequelize from "../database/database.js"; // Asegúrate de tener la conexión a la DB configurada
 
 // Definición del modelo Role
-export const Role = sequelize.define("users", {
+export const Role = sequelize.define("roles", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,

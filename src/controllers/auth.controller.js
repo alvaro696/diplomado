@@ -1,4 +1,5 @@
 import { User } from "../models/users.js";
+import { Role } from "../models/role.js";
 import logger from "../logs/logger.js";
 import { comparar } from "../common/bcrypt.js";
 import jwt from "jsonwebtoken";
@@ -8,7 +9,17 @@ async function login(req, res) {
   console.log("Body recibido:", req.body);
   try {
     const { username, password } = req.body;
-    const user = await User.findOne({ where: { username } });
+    // Usamos el alias "Role" en la consulta include
+    const user = await User.findOne({
+      where: { username },
+      include: [
+        {
+          model: Role,
+          as: "Role", // Asegúrate de que coincide con la asociación en el modelo
+          attributes: ["name", "permissions"],
+        },
+      ],
+    });
     if (!user) {
       return res.status(404).json({ message: "usuario no encontrado" });
     }
@@ -25,8 +36,9 @@ async function login(req, res) {
       user: {
         id: user.id,
         username: user.username,
-        role: user.role, // Se añade el rol del usuario
-        // Puedes incluir otros campos que sean necesarios, por ejemplo permisos
+        // Extraemos el rol del objeto Role obtenido en la consulta
+        role: user.Role ? user.Role.name : "user",
+        permissions: user.Role ? user.Role.permissions : [],
       },
     });
   } catch (error) {
