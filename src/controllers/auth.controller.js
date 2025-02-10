@@ -25,7 +25,8 @@ async function login(req, res) {
       user: {
         id: user.id,
         username: user.username,
-        // agrega otros campos que necesites
+        role: user.role, // Se añade el rol del usuario
+        // Puedes incluir otros campos que sean necesarios, por ejemplo permisos
       },
     });
   } catch (error) {
